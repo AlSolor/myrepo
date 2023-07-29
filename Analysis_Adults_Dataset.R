@@ -45,6 +45,7 @@ adults[['fnlwgt']] = NULL
 summary(adults$age)
 summary(adults$occupation)
 summary(adults$marital_status)
+summary(adults$hours_per_week)
 
 #Visualization of the distribution of some variables
 ggplot(adults,aes(x=age))+
@@ -52,3 +53,30 @@ ggplot(adults,aes(x=age))+
   ggtitle("Age Distribution")
 
 boxplot(adults$age,main="Age Distribution")
+
+ggplot(adults, aes(x=hours_per_week)) +
+  geom_bar(fill="blue",col="black")+
+  ggtitle("Hours poer week Distribution")
+
+boxplot(adults$hours_per_week,main="Hours per week Distribution")
+
+#Transformation of discrete variable to groups
+hoursW <- adults$hours_per_week #Assign
+hoursW[adults$hours_per_week <= 20] <- "1-20"
+hoursW[adults$hours_per_week >= 20 & adults$hours_per_week < 40] <- "21-39"
+hoursW[adults$hours_per_week >= 40 & adults$hours_per_week <= 45] <- "40-45"
+hoursW[adults$hours_per_week > 45 & adults$hours_per_week <= 60] <- "46-60"
+hoursW[adults$hours_per_week > 60 & adults$hours_per_week <= 80] <- "61-80"
+hoursW[adults$hours_per_week >= 80] <- "80+"
+hoursW
+hoursW <- as.factor(hoursW)
+hoursW
+totalHours <- summary(hoursW)
+totalHours
+percentages <- numeric(length(totalHours))
+length(percentages)
+for(i in 1: length(percentages)){
+  percentages[i] <- (totalHours[i]/nrow(adults))*100
+}
+data.frame(totalHours,percentages)
+summary(adults)
