@@ -22,3 +22,15 @@ adults <- read.table("C:/Users/alsol/Desktop/MINERIA_PARA_R/archive/adult.data",
 #Visualize the number of registers and the type of variables
 dim(adults)
 str(adults)
+
+#Transformation of the chr variables to Factors
+adults$workclass <- as.factor(adults$workclass)
+adults$education <- as.factor(adults$education)
+adults$marital_status <- as.factor(adults$marital_status)
+adults$occupation <- as.factor(adults$occupation)
+adults$race <- as.factor(adults$race)
+adults$sex  <- as.factor(adults$sex)
+adults$native_country <- as.factor(adults$native_country)
+adults$income <- as.factor(adults$income)
+
+str(adults)
