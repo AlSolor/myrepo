@@ -28,9 +28,16 @@ adults$workclass <- as.factor(adults$workclass)
 adults$education <- as.factor(adults$education)
 adults$marital_status <- as.factor(adults$marital_status)
 adults$occupation <- as.factor(adults$occupation)
+adults$relationship <- as.factor(adults$relationship)
 adults$race <- as.factor(adults$race)
 adults$sex  <- as.factor(adults$sex)
 adults$native_country <- as.factor(adults$native_country)
 adults$income <- as.factor(adults$income)
 
+str(adults)
+summary(adults)
+
+#Elimination of undesired columns (fnlwgt and education_num)
+adults[['education_num']] = NULL
+adults[['fnlwgt']] = NULL
 str(adults)
