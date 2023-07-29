@@ -1,4 +1,5 @@
 #Load of the Adult dataset
+library(ggplot2)
 adults <- read.table("C:/Users/alsol/Desktop/MINERIA_PARA_R/archive/adult.data",
                      sep = ",", #Separator
                      header = F, #No header in data file
@@ -35,9 +36,19 @@ adults$native_country <- as.factor(adults$native_country)
 adults$income <- as.factor(adults$income)
 
 str(adults)
-summary(adults)
 
 #Elimination of undesired columns (fnlwgt and education_num)
 adults[['education_num']] = NULL
 adults[['fnlwgt']] = NULL
-str(adults)
+
+#Quick analysis of some variables like age, occupation and marital status
+summary(adults$age)
+summary(adults$occupation)
+summary(adults$marital_status)
+
+#Visualization of the distribution of some variables
+ggplot(adults,aes(x=age))+
+  geom_bar(fill="blue",col="black")+
+  ggtitle("Age Distribution")
+
+boxplot(adults$age,main="Age Distribution")
