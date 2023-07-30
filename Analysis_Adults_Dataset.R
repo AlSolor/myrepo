@@ -85,3 +85,28 @@ for(i in 1: length(percentages)){ #For cycle to obtain the relative frequency of
 
 data.frame(totalHours,percentages) #Creation of the dataframe with the interval and the relative frequency
 
+#Analysis of capital gain
+summary(adults$capital.gain)
+
+sum(adults$capital.gain == 0)/nrow(adults) #Percentage of capital gain with value equal to zero
+
+adults[['capital.gain']]=NULL #Elimination of column capital.gain
+
+#Analysis of capital loss
+summary(adults$capital_loss)
+sum(adults$capital_loss == 0) / nrow(adults)
+
+adults[['capital_loss']] = NULL #Elimination of column capital_loss
+str(adults)
+
+#Analysis with two variables
+table(adults$sex,adults$age)
+
+ggplot(adults,aes(x=age,fill=sex))+
+  geom_histogram(binwidth=1,color='grey')+
+  ggtitle("Distribución de sexo por edades")
+
+#Finding correlation or relationships
+boxplot(age ~ income, data=adults,
+  main="Distribución de edades de acuerdo al ingreso",xlab="Ingresos",ylab="Edad")
+  
