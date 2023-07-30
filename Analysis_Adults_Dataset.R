@@ -61,22 +61,27 @@ ggplot(adults, aes(x=hours_per_week)) +
 boxplot(adults$hours_per_week,main="Hours per week Distribution")
 
 #Transformation of discrete variable to groups
-hoursW <- adults$hours_per_week #Assign
+
+hoursW <- adults$hours_per_week #Assign the column to a variable
+
+#Definition of the intervals
+
 hoursW[adults$hours_per_week <= 20] <- "1-20"
 hoursW[adults$hours_per_week >= 20 & adults$hours_per_week < 40] <- "21-39"
 hoursW[adults$hours_per_week >= 40 & adults$hours_per_week <= 45] <- "40-45"
 hoursW[adults$hours_per_week > 45 & adults$hours_per_week <= 60] <- "46-60"
 hoursW[adults$hours_per_week > 60 & adults$hours_per_week <= 80] <- "61-80"
 hoursW[adults$hours_per_week >= 80] <- "80+"
-hoursW
-hoursW <- as.factor(hoursW)
-hoursW
-totalHours <- summary(hoursW)
-totalHours
-percentages <- numeric(length(totalHours))
-length(percentages)
-for(i in 1: length(percentages)){
+
+hoursW <- as.factor(hoursW) #Transform the interval to a factor
+
+totalHours <- summary(hoursW) #Analyze the new factors
+
+percentages <- numeric(length(totalHours)) #Create an array of zeros with size equals the number of factor
+
+for(i in 1: length(percentages)){ #For cycle to obtain the relative frequency of every interval 
   percentages[i] <- (totalHours[i]/nrow(adults))*100
 }
-data.frame(totalHours,percentages)
-summary(adults)
+
+data.frame(totalHours,percentages) #Creation of the dataframe with the interval and the relative frequency
+
