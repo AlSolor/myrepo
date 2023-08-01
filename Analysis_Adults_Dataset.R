@@ -23,7 +23,7 @@ adults <- read.table("C:/Users/alsol/Desktop/MINERIA_PARA_R/archive/adult.data",
 #Visualize the number of registers and the type of variables
 dim(adults)
 str(adults)
-
+adults <- subset(adults,!(workclass %in% c('Never-worked','Without-pay'))) #Elimination of rows with these workclass
 #Transformation of the chr variables to Factors
 adults$workclass <- as.factor(adults$workclass)
 adults$education <- as.factor(adults$education)
@@ -40,6 +40,10 @@ str(adults)
 #Elimination of undesired columns (fnlwgt and education_num)
 adults[['education_num']] = NULL
 adults[['fnlwgt']] = NULL
+
+#Remove unwanted rows like people whow never worked or without pay
+str(adults)
+summary(adults$workclass)
 
 #Quick analysis of some variables like age, occupation and marital status
 summary(adults$age)
@@ -109,4 +113,53 @@ ggplot(adults,aes(x=age,fill=sex))+
 #Finding correlation or relationships
 boxplot(age ~ income, data=adults,
   main="Distribución de edades de acuerdo al ingreso",xlab="Ingresos",ylab="Edad")
-  
+
+#Visualization of income based on type of 
+summary(adults$workclass) #See a summary of the types and quantity of workers per class
+
+## Creation of columns for two types of incomes per workclass
+cont <- table(adults[adults$workclass == '?',]$income)["<=50K"] 
+cont <- c(cont, table(adults[adults$workclass == '?',]$income)[">50K"]) 
+
+#All Goverment workers assign to one value
+cont <- c(cont, table(adults[adults$workclass == 'Federal-gov',]$income)["<=50K"]+
+            table(adults[adults$workclass == 'Local-gov',]$income)["<=50K"]+
+            table(adults[adults$workclass == 'State-gov',]$income)["<=50K"])
+
+cont <- c(cont, table(adults[adults$workclass == 'Federal-gov',]$income)[">50K"]+
+        table(adults[adults$workclass == 'Local-gov',]$income)[">50K"]+
+        table(adults[adults$workclass == 'State-gov',]$income)[">50K"])
+
+#Private workers
+cont <- c(cont, table(adults[adults$workclass == 'Private',]$income)["<=50K"])
+
+cont <- c(cont, table(adults[adults$workclass == 'Private',]$income)[">50K"])
+
+#Independent people
+cont <- c(cont, table(adults[adults$workclass == 'Self-emp-inc',]$income)["<=50K"]+
+        table(adults[adults$workclass == 'Self-emp-not-inc',]$income)["<=50K"])
+
+cont <- c(cont, table(adults[adults$workclass == 'Self-emp-inc',]$income)[">50K"]+
+        table(adults[adults$workclass == 'Self-emp-not-inc',]$income)[">50K"])
+
+cont <- as.numeric(cont) #Convertion to numeric data
+
+typeWork <- rep(c('Unknowk','Goverment', 'Private', 'Independent'), each = 2) #Creation of table with names of types of workers 
+
+ingresos <- rep(c('<=50K', '>50K'), 4) #Creation of table with the two types of incomes
+
+typeWorks <- typeWork[1:8] #Creation of vectors with the type of workers and incomes
+
+ingreso <- ingresos[1:8]
+
+df <- data.frame(typeWorks,ingreso,cont) #Creation of dataframe with the values to analyze better
+
+df$percentage <- (df$cont/nrow(adults))*100 #Calculation of percentages of every type of worker and income
+
+#Stacked bar chart to see the distribution
+ggplot(df,aes(fill=ingreso, y = cont, x = typeWorks))+
+  geom_bar(position="stack",stat="identity")
+
+#Stacked percentage chart to see the proportion of income per type of worker
+ggplot(df,aes(fill=ingreso, y = cont, x = typeWorks))+
+  geom_bar(position="fill",stat="identity")
