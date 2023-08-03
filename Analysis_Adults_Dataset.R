@@ -120,7 +120,6 @@ summary(adults$workclass) #See a summary of the types and quantity of workers pe
 ## Creation of columns for two types of incomes per workclass
 cont <- table(adults[adults$workclass == '?',]$income)["<=50K"] 
 cont <- c(cont, table(adults[adults$workclass == '?',]$income)[">50K"]) 
-
 #All Goverment workers assign to one value
 cont <- c(cont, table(adults[adults$workclass == 'Federal-gov',]$income)["<=50K"]+
             table(adults[adults$workclass == 'Local-gov',]$income)["<=50K"]+
@@ -156,6 +155,7 @@ df <- data.frame(typeWorks,ingreso,cont) #Creation of dataframe with the values 
 
 df$percentage <- (df$cont/nrow(adults))*100 #Calculation of percentages of every type of worker and income
 
+df
 #Stacked bar chart to see the distribution
 ggplot(df,aes(fill=ingreso, y = cont, x = typeWorks))+
   geom_bar(position="stack",stat="identity")
@@ -163,3 +163,44 @@ ggplot(df,aes(fill=ingreso, y = cont, x = typeWorks))+
 #Stacked percentage chart to see the proportion of income per type of worker
 ggplot(df,aes(fill=ingreso, y = cont, x = typeWorks))+
   geom_bar(position="fill",stat="identity")
+
+
+
+#Analysis of the education variable
+ggplot(adults,aes(x=education))+
+  geom_bar(col="salmon")
+dim(adults)
+summary(adults$education)
+
+#Creation of temporal dataframe to obtain better visualization
+edu_level <- table(adults[adults$education == 'Some-college',]$education)['Some-college']
+edu_level <- c(edu_level,
+               table(adults[adults$education == '1st-4th',]$education)['1st-4th']+
+                 table(adults[adults$education == '5th-6th',]$education)['5th-6th']+
+                 table(adults[adults$education == '7th-8th',]$education)['7th-8th']+
+                 table(adults[adults$education == '9th',]$education)['9th']+
+                 table(adults[adults$education == '10th',]$education)['10th']+
+                 table(adults[adults$education == '11th',]$education)['11th']+
+                 table(adults[adults$education == '12th',]$education)['12th']
+               )
+edu_level <- c(edu_level, table(adults[adults$education == 'Prof-school',]$education)['Prof-school'])
+edu_level <- c(edu_level, table(adults[adults$education == 'Masters',]$education)['Masters'])
+edu_level <- c(edu_level, table(adults[adults$education == 'HS-grad',]$education)['HS-grad'])
+edu_level <- c(edu_level, table(adults[adults$education == 'Doctorate',]$education)['Doctorate'])
+edu_level <- c(edu_level, table(adults[adults$education == 'Bachelors',]$education)['Bachelors'])
+edu_level <- c(edu_level, table(adults[adults$education == 'Assoc-acdm',]$education)['Assoc-acdm']+
+                 table(adults[adults$education == 'Assoc-voc',]$education)['Assoc-voc'])
+edu_level
+
+count_edu_level <- as.numeric(edu_level)
+type_Education <- c('Some-college','1st-12th','Prof-school','Masters','HS-grad','Doctorate','Bachelors','Assoc')
+educa <- type_Education[1:8]
+eduDF <- data.frame(type_Education,count_edu_level)
+eduDF$percentage <- (eduDF$count_edu_level/nrow(adults))*100
+
+ggplot(eduDF,aes(x=educa,y=count_edu_level))+
+  geom_bar(col="blue",fill="salmon",stat="identity")
+
+#Analysis of Two variables
+boxplot(age ~ marital_status, data = adults,
+        main = "Distribución de educación por sexo")
